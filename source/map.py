@@ -24,6 +24,7 @@ class Map:
         self.player_spawn = None
         self.enemy_spawn = []
         self.builMap(tile_map)
+        self.buildNeighborhood()
         self.total_coins = len(self.coins) + len(self.special_coins)
 
     def builMap(self, tile_map):
@@ -44,6 +45,14 @@ class Map:
                     self.enemy_spawn.append(Point(x,y))
                 if tile is O:
                     self.player_spawn = Point(x,y)
+
+    def buildNeighborhood(self):
+        for y in range(self.height):
+            for x in range(self.width):
+                tile = self.tiles[y][x]
+                if tile.walkable:
+                    tile.neighbours = self.getNeighbours(tile.position)
+
 
 
     def draw(self,ctx, x_start, y_start):
@@ -92,7 +101,14 @@ class Map:
         '''
         return self.tiles[position.y][position.x].walkable
 
-    def getNeighboursPosition(self, pos):
+    def getNeighboursPosition(self,pos,dynamic = False):
+
+        if dynamic:
+            return self.getNeighbours(pos)
+
+        return self.tiles[pos.y][pos.x].neighbours
+
+    def getNeighbours(self, pos):
         '''
             Return the positions of the walkable neighbours
             pos -> Point that is the origin

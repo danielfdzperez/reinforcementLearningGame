@@ -1,4 +1,5 @@
 import pygame
+import time
 from point import *
 from node import *
 
@@ -12,7 +13,7 @@ def square(y,x,size):
     '''
     return pygame.Rect(x,y,size,size)
 #import time
-def aStar(start_position, target, map, max_i = 1000):
+def aStar(start_position, target, map, dynamic = False ,max_i = 1000):
     #startt = time.time()
     max_iterations = max_i
     '''
@@ -46,7 +47,8 @@ def aStar(start_position, target, map, max_i = 1000):
             find = True
         #else:
             #Get the neighbours
-        neighbours = map.getNeighboursPosition(current_node.position)
+        #startt = time.time()
+        neighbours = map.getNeighboursPosition(current_node.position,dynamic)
         nodes = set()
         for n in neighbours:
             #node = Node(current_node, n, end)
@@ -54,8 +56,10 @@ def aStar(start_position, target, map, max_i = 1000):
             #If the node hasn't been visited
             #if node not in close:
             #    open.append(node)
+        #endt = time.time()
+        #print(endt - startt)
         neighbours = list(nodes-close)
-
+        
         for n in neighbours:
             if n in open:
                 index = open.index(n)
@@ -64,6 +68,7 @@ def aStar(start_position, target, map, max_i = 1000):
             else:
                 open.append(n)
 
+        
 
         #open = open + neighbours
 
@@ -84,14 +89,14 @@ def aStar(start_position, target, map, max_i = 1000):
     #return (len(result),dir,result)
 
     #print(i)
-    dist = 10
+    dist = max_iterations
     if find:
         dist = len(result)
     return (dist,result)
 
-def distance(point1, point2, map, max_i = 1000):
+def distance(point1, point2, map, dynamic = False,max_i = 100):
     #dist, _, _ = aStar(point1, point2, map)
-    dist, _ = aStar(point1, point2, map, max_i)
+    dist, _ = aStar(point1, point2, map, dynamic,max_i)
     return dist
 
 def direction(origin, neighbour):

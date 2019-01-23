@@ -8,6 +8,7 @@ from point import *
 from target import *
 from ai import *
 from text import *
+from player import *
 
 
 class World:
@@ -58,7 +59,7 @@ class World:
             Initialize the game
         '''
         self.selectMap(self.level)
-        self.player = Character(self.current_map.player_spawn, self, CHARACTER1_SHEET)
+        self.player = Player(self.current_map.player_spawn, self, CHARACTER1_SHEET)
         self.enemy.clear()
         self.enemy.append(AI(self.current_map.enemy_spawn[0],self,CHARACTER2_SHEET))
         self.enemy.append(AI(self.current_map.enemy_spawn[1],self,CHARACTER2_SHEET))
@@ -98,7 +99,7 @@ class World:
             self.update()
             self.draw()
              
-            print(self.clock.get_fps())
+            #print(self.clock.get_fps())
             self.clock.tick_busy_loop(self.fps)
             #self.clock.tick(self.fps)
 

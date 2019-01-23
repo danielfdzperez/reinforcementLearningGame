@@ -97,6 +97,7 @@ class Character:
                self.moving = False
                #self.move()
                self.animation_position = self.position
+               #print('entra')
                #self.world.testCoin()
         #future_pos = (self.position + self.direction) * Character.SIZE
         #if self.animation_position >= 

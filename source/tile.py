@@ -23,6 +23,7 @@ class Tile:
         self.image = image
         self.value = value
         self.invertible = invertible
+        self.neighbours = []
 
     
     def draw(self, ctx,x, y):

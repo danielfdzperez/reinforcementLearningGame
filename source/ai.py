@@ -18,7 +18,7 @@ class AI(character.Character):
         map = self.world.current_map
 
         #distance, movement, path = aStar(self.position, player_position, map)
-        dist, path = aStar(self.position, player_position, map)
+        dist, path = aStar(self.position, player_position, map, True)
 
         movement = NONE_DIRECTION
         if len(path) > 1:
@@ -26,13 +26,13 @@ class AI(character.Character):
 
 
         if self.state == AI.FLEE and movement is not NONE_DIRECTION:
-            neighbours = map.getNeighboursPosition(self.position)
+            neighbours = map.getNeighboursPosition(self.position,True)
             directions = []
             for neighbour in neighbours:
                 directions.append(direction(self.position, neighbour))
             directions.remove(movement)
             if directions:
-                directions.sort(key=lambda d:  distance(self.position + d, player_position, map, max_i = 1000),reverse=True)
+                directions.sort(key=lambda d:  distance(self.position + d, player_position, map, True ,max_i = 1000),reverse=True)
                 movement = directions[0]
 
         self.changeDirection(movement)
