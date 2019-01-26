@@ -7,6 +7,7 @@ from character import *
 from point import *
 from target import *
 from ai import *
+from textContainer import *
 from text import *
 from player import *
 
@@ -17,6 +18,7 @@ class World:
     '''
 
     SPECIAL_TIME = 100
+
     def __init__(self, maps, ctx):
         '''
             Constructor
@@ -28,9 +30,11 @@ class World:
         self.level = 0
         self.max_level = len(maps)
         self.running = False
+        
+        self.screen_width, self.screen_height = pygame.display.get_surface().get_size()
 
-        self.ctx = None
-        self.clock = None
+        self.ctx = ctx
+        self.clock = pygame.time.Clock()
         self.fps = 60
 
         self.update_player = 0
@@ -40,10 +44,17 @@ class World:
         self.tick_special = 0
         self.special = False
         
+        self.texts = TextContainer(self.ctx)
        # self.initializePygame()
-        self.ctx = ctx
-        self.clock = pygame.time.Clock()
+        
+        self.loadText()
+        
         self.loadLevel()
+
+    def loadText(self):
+        loadingDisplay(self.ctx)
+        self.texts.addText(GAME_OVER)
+        self.texts.addText(WIN)
 
     def initializePygame(self):
         '''
@@ -58,6 +69,9 @@ class World:
         '''
             Initialize the game
         '''
+
+        loadingDisplay(self.ctx)
+
         self.selectMap(self.level)
         self.player = Player(self.current_map.player_spawn, self, CHARACTER1_SHEET)
         self.enemy.clear()
@@ -70,7 +84,7 @@ class World:
             self.loadLevel()
         else:
             self.running = False
-            self.endGame("You win")
+            self.endGame(WIN)
 
     def selectMap(self, level):
         '''
@@ -95,9 +109,9 @@ class World:
         '''
         while self.running:
             #self.clock.tick_busy_loop(self.fps)
+            self.draw()
             self.events()
             self.update()
-            self.draw()
              
             #print(self.clock.get_fps())
             self.clock.tick_busy_loop(self.fps)
@@ -106,14 +120,9 @@ class World:
         
     def endGame(self, txt):
         stop = True
-        font_preferences = [
-            "Sans Serif",
-            "Papyrus",
-            "Comic Sans MS"]
-        texts = Text(font_preferences)
-        text = texts.create_text(txt, 72, (0,0,0))
-        w, h = pygame.display.get_surface().get_size()
-        self.ctx.blit(text,( (w - text.get_width()) // 2,(h  - text.get_height()) // 2))
+
+        w, h = self.texts[txt].dimensions()
+        self.texts[txt].display(self.ctx, (self.screen_width-w) // 2, (self.screen_height - h) // 2)
         pygame.display.flip()
         while stop:
             for event in pygame.event.get():
@@ -208,4 +217,4 @@ class World:
                 for i in range(10):
                     self.draw()
                     self.clock.tick_busy_loop(self.fps)
-                self.endGame('Game over')
+                self.endGame(GAME_OVER)

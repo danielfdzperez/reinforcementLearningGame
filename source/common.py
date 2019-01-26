@@ -2,8 +2,17 @@ import pygame
 import time
 from point import *
 from node import *
+from text import *
+
+pygame.init()
 
 #COMMON FUNCTIONS
+
+def loadingDisplay(ctx):
+    ctx.fill(BLACK)
+    LOADING_TEXT.displayMiddle(ctx)
+    pygame.display.flip()
+
 
 def square(y,x,size):
     '''
@@ -121,7 +130,20 @@ S = 2 #Special
 R = 3 #Enemy Respawn
 O = 4 #Player Respawn
 
+#Colors
 BLACK = (0,0,0)#Color black
+WHITE = (255,255,255)#Color black
+
+#Game texts
+GAME_OVER = "Game over"
+WIN       = "You win"
+LOADING   = "Loading ..."
+PLAYER    = "Human"
+MACHINE   = "IA"
+
+font_display_loading = pygame.font.Font(None, 80)
+LOADING_TEXT = Text(LOADING,WHITE,font_display_loading) 
+
 
 #File name
 GRAPHICS = "graphics/"
