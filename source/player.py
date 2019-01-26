@@ -41,7 +41,7 @@ class Player(character.Character):
         '''
             Update the animation
         '''
-        self.animation = (self.animation + 1)%Character.ANIMATIONS
+        self.animation = (self.animation + 0.25)%Character.ANIMATIONS
         a = 2/Character.SIZE
         self.animation_position += self.direction * Point(a, a)
         

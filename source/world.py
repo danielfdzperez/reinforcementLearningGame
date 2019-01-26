@@ -33,7 +33,9 @@ class World:
         
         self.screen_width, self.screen_height = pygame.display.get_surface().get_size()
 
+        #self.ctx = ctx.copy()
         self.ctx = ctx
+        self.original_ctx = ctx
         self.clock = pygame.time.Clock()
         self.fps = 60
 
@@ -43,6 +45,7 @@ class World:
 
         self.tick_special = 0
         self.special = False
+        self.countdown = True
         
         self.texts = TextContainer(self.ctx)
        # self.initializePygame()
@@ -52,18 +55,27 @@ class World:
         self.loadLevel()
 
     def loadText(self):
+        loadingDisplay(self.original_ctx)
         loadingDisplay(self.ctx)
         self.texts.addText(GAME_OVER)
         self.texts.addText(WIN)
+        self.texts.addText(str(3))
+        self.texts.addText(str(2))
+        self.texts.addText(str(1))
 
-    def initializePygame(self):
-        '''
-            Initialize the pygame requirements
-        '''
-        pygame.init()
-        width = len(self.maps[self.level]) * Tile.SIZE
-        self.ctx = pygame.display.set_mode((width,width))
-        self.clock = pygame.time.Clock()
+    def wait(self):
+        count = 3
+
+        self.clock.tick_busy_loop(1)
+        while count > 0:
+            self.draw()
+            self.texts[str(count)].displayMiddle(self.ctx)
+            #self.original_ctx.blit(pygame.transform.scale(self.ctx, pygame.display.get_surface().get_size()), (0, 0))
+            pygame.display.flip()
+            count -= 1
+            self.clock.tick_busy_loop(1)
+        self.countdown = False            
+
 
     def loadLevel(self):
         '''
@@ -82,6 +94,7 @@ class World:
         self.level += 1
         if self.level < self.max_level:
             self.loadLevel()
+            self.countdown = True
         else:
             self.running = False
             self.endGame(WIN)
@@ -108,6 +121,10 @@ class World:
             Updates the characters and draw all the entities.
         '''
         while self.running:
+
+            if self.countdown:
+                self.wait()
+
             #self.clock.tick_busy_loop(self.fps)
             self.draw()
             self.events()
@@ -123,6 +140,7 @@ class World:
 
         w, h = self.texts[txt].dimensions()
         self.texts[txt].display(self.ctx, (self.screen_width-w) // 2, (self.screen_height - h) // 2)
+        #self.original_ctx.blit(pygame.transform.scale(self.ctx, pygame.display.get_surface().get_size()), (0, 0))
         pygame.display.flip()
         while stop:
             for event in pygame.event.get():
@@ -139,6 +157,9 @@ class World:
         self.player.draw(self.ctx,0,0)
         for enemy in self.enemy:
             enemy.draw(self.ctx,0,0)
+        #self.original_ctx.blit(self.ctx,(0,0))
+
+        #self.original_ctx.blit(pygame.transform.scale(self.ctx, pygame.display.get_surface().get_size()), (0, 0))
         pygame.display.flip()
 
     def update(self):
@@ -190,6 +211,9 @@ class World:
                 self.player.futureDirection(PLAYER_EVENTS[event.key])
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.VIDEORESIZE:
+               self.original_ctx = pygame.display.set_mode(
+                   event.dict['size'], pygame.RESIZABLE)
 
 
     def canMove(self, position):

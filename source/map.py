@@ -16,14 +16,15 @@ class Map:
             tile_map -> Map without tiles
         '''
         self.world = world
-        self.width = len(tile_map[0])
-        self.height = len(tile_map)
+        self.tile_types = tile_map[1]
+        self.width = len(tile_map[0][0])
+        self.height = len(tile_map[0])
         self.tiles = [ [ None for i in range(self.width) ] for j in range(self.height)]
         self.coins = []
         self.special_coins = []
         self.player_spawn = None
         self.enemy_spawn = []
-        self.builMap(tile_map)
+        self.builMap(tile_map[0])
         self.buildNeighborhood()
         self.total_coins = len(self.coins) + len(self.special_coins)
 
@@ -36,7 +37,7 @@ class Map:
         for y in range(self.height):
             for x in range(self.width):
                 tile  = tile_map[y][x]
-                self.tiles[y][x] = tile_types[tile](x,y)
+                self.tiles[y][x] = self.tile_types[tile](x,y)
                 if tile is P:
                     self.coins.append(targets_types[tile](x,y))
                 if tile is S:

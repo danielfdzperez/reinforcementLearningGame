@@ -11,9 +11,9 @@ SELECTED_COLOR  = (204, 102, 0)
 
 def main():
     pygame.init()
-    size = len(maps[1]) * Tile.SIZE
+    size = len(maps[0][0]) * Tile.SIZE
     
-    ctx = pygame.display.set_mode((size,size))
+    ctx = pygame.display.set_mode((size,size), pygame.RESIZABLE)
     
     loadingDisplay(ctx)
     
@@ -38,7 +38,7 @@ def main():
 
         pygame.display.flip()
         for event in pygame.event.get():
-            if event.type == pygame.QUIT:
+            if event.type == pygame.QUIT or event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 exit = True
                 
             if event.type == pygame.KEYDOWN:

@@ -40,7 +40,7 @@ class Character:
         self.current_sprite = self.sprite_right
         self.animation = 0 #Current animation frame
 
-        self.animation_position = self.position * Character.SIZE
+        self.animation_position = self.position
         self.moving = False
         
     def loadSprite(self,sheet,raw):
@@ -89,7 +89,7 @@ class Character:
         '''
             Update the animation
         '''
-        self.animation = (self.animation + 1)%Character.ANIMATIONS
+        self.animation = (self.animation + 0.25)%Character.ANIMATIONS
         a = 2/Character.SIZE
         self.animation_position += self.direction * Point(a, a)
         
@@ -110,7 +110,7 @@ class Character:
         '''
         #pygame.draw.rect(ctx, (0,255,0), square(self.position.y*Tile.SIZE, self.position.x*Tile.SIZE,Tile.SIZE))
         #ctx.blit(self.current_sprite[self.animation], (self.position.x*Character.SIZE,self.position.y*Character.SIZE))
-        ctx.blit(self.current_sprite[self.animation], (self.animation_position.x * Character.SIZE,self.animation_position.y * Character.SIZE))
+        ctx.blit(self.current_sprite[int(self.animation)], (self.animation_position.x * Character.SIZE,self.animation_position.y * Character.SIZE))
         if self.moving:
             self.updateAnimation()
         #print(self.animation_position)

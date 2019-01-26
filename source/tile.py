@@ -10,7 +10,13 @@ class Tile:
     #Constants
     SIZE = 32
 
-    def __init__(self, x, y, value, image=None, walkable=False, invertible = False):
+    #Types
+    PATH = 1
+    WALL = 0
+    ENEMY_RESPAWN = 2
+    PLAYER_RESPAWN = 3
+
+    def __init__(self, x, y, type, image=None, walkable=False, invertible = False):
         '''
             Constructor
             x and y -> Position of the tile
@@ -21,7 +27,7 @@ class Tile:
         self.position = Point(x,y)
         self.walkable = walkable
         self.image = image
-        self.value = value
+        self.type = type
         self.invertible = invertible
         self.neighbours = []
 
@@ -39,32 +45,5 @@ class Tile:
         if self.invertible:
             self.walkable = not self.walkable
 
-    #Factory functions
-    @classmethod
-    def wall(cls,x,y):
-        '''
-            Create a wall
-            x and y -> Coordinates
-        '''
-        sheet = SpriteSheet(TILE_MAP_SHEET)
-        image = sheet.get_image(128,96,Tile.SIZE,Tile.SIZE)
-        return cls(x,y,W,image)
-    @classmethod
-    def enemyRespawn(cls,x,y):
-        '''
-            Create a wall
-            x and y -> Coordinates
-        '''
-        sheet = SpriteSheet(TILE_MAP_SHEET)
-        image = sheet.get_image(Tile.SIZE*5,Tile.SIZE*1,Tile.SIZE,Tile.SIZE)
-        return cls(x,y,W,image)
-    @classmethod
-    def path(cls,x,y ):
-        '''
-            Create a path
-            x and y -> Coordinates
-        '''
-        sheet = SpriteSheet(TILE_MAP_SHEET)
-        image = sheet.get_image(32,64,Tile.SIZE,Tile.SIZE)
-        return cls(x,y,P,image,walkable=True, invertible = True)
+    
     
