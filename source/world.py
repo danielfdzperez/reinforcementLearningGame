@@ -17,7 +17,7 @@ class World:
         Class that controll all the parts of the game
     '''
 
-    SPECIAL_TIME = 100
+    SPECIAL_TIME = 215
 
     def __init__(self, maps, ctx):
         '''
@@ -68,12 +68,14 @@ class World:
 
         self.clock.tick_busy_loop(1)
         while count > 0:
+            TICK1.play()
             self.draw()
             self.texts[str(count)].displayMiddle(self.ctx)
             #self.original_ctx.blit(pygame.transform.scale(self.ctx, pygame.display.get_surface().get_size()), (0, 0))
             pygame.display.flip()
             count -= 1
             self.clock.tick_busy_loop(1)
+        TICK2.play()
         self.countdown = False            
 
 
@@ -85,10 +87,10 @@ class World:
         loadingDisplay(self.ctx)
 
         self.selectMap(self.level)
-        self.player = Player(self.current_map.player_spawn, self, CHARACTER1_SHEET)
+        self.player = Player(self.current_map.player_spawn, self, [CHARACTER1_SHEET])
         self.enemy.clear()
-        self.enemy.append(AI(self.current_map.enemy_spawn[0],self,CHARACTER2_SHEET))
-        self.enemy.append(AI(self.current_map.enemy_spawn[1],self,CHARACTER2_SHEET))
+        self.enemy.append(AI(self.current_map.enemy_spawn[0],self,[CHARACTER2_SHEET, CHARACTER4_SHEET]))
+        self.enemy.append(AI(self.current_map.enemy_spawn[1],self,[CHARACTER2_SHEET, CHARACTER4_SHEET]))
 
     def nextLevel(self):
         self.level += 1
@@ -227,7 +229,7 @@ class World:
     def collectCoin(self):
 
         #print('punto')
-        1 +1 
+        COIN.play()
 
     def collectSpecial(self):
         self.special = True
@@ -238,6 +240,7 @@ class World:
         for e in self.enemy:
             if e.position == self.player.position:
                 self.running = False
+                DEAD.play()
                 for i in range(10):
                     self.draw()
                     self.clock.tick_busy_loop(self.fps)

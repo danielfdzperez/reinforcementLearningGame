@@ -16,7 +16,11 @@ class SpriteSheet(object):
         """
  
         # Load the sprite sheet.
-        self.sprite_sheet = pygame.image.load(file_name)
+        if type(file_name) is str:
+            self.sprite_sheet = pygame.image.load(file_name)
+        else:
+            self.sprite_sheet = file_name#pygame.image.load(file_name)
+
         #If has an alpha it uses convert_alpha instead of convert
         if self.sprite_sheet.get_alpha():
             self.sprite_sheet = self.sprite_sheet.convert_alpha()
@@ -29,6 +33,7 @@ class SpriteSheet(object):
             Pass in the x, y location of the sprite
             and the width and height of the sprite. """
  
+        
         # Create a new blank image with alpha background
         image = pygame.Surface([width,height], pygame.SRCALPHA, 32).convert_alpha()
  

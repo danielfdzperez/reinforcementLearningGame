@@ -4,6 +4,8 @@ from point import *
 from node import *
 from text import *
 
+pygame.mixer.pre_init(44100, -16, 2, 2048)
+pygame.mixer.init()
 pygame.init()
 
 #COMMON FUNCTIONS
@@ -139,7 +141,7 @@ GAME_OVER = "Game over"
 WIN       = "You win"
 LOADING   = "Loading ..."
 PLAYER    = "Human"
-MACHINE   = "IA"
+MACHINE   = "AI"
 
 font_display_loading = pygame.font.Font(None, 80)
 LOADING_TEXT = Text(LOADING,WHITE,font_display_loading) 
@@ -150,6 +152,7 @@ GRAPHICS = "graphics/"
 TILE_MAP_SHEET = GRAPHICS + "tile_image_map.png"
 CHARACTER1_SHEET = GRAPHICS + "character1.png"
 CHARACTER2_SHEET = GRAPHICS + "character2.png"
+CHARACTER4_SHEET = GRAPHICS + "character4.png"
 COINS = GRAPHICS + "coins.png"
 PIZZA = GRAPHICS + "pizza.png"
 
@@ -162,3 +165,20 @@ NONE_DIRECTION = Point(0,0)
 
 PLAYER_EVENTS = {pygame.K_UP:UP, pygame.K_DOWN:DOWN, 
         pygame.K_RIGHT:RIGHT, pygame.K_LEFT:LEFT}
+
+TILE_SHEET = pygame.image.load(TILE_MAP_SHEET)
+
+MAP_SIZE = 15
+
+#Sounds
+SOUNDS = "sounds/"
+
+ACCEPT = pygame.mixer.Sound(SOUNDS + 'accept.wav')
+TICK1  = pygame.mixer.Sound(SOUNDS + 'countdownA.ogg')
+TICK2  = pygame.mixer.Sound(SOUNDS + 'countdownB.ogg')
+COIN   = pygame.mixer.Sound(SOUNDS + 'pickupCoin.wav')
+DEAD    = pygame.mixer.Sound(SOUNDS + 'roundEnd.wav')
+
+
+
+

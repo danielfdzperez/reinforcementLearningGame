@@ -1,12 +1,12 @@
 from common import *
-import character
-
-class AI(character.Character):
+import character as ch
+from spriteSheet import *
+class AI(ch.Character):
 
     HUNT = 0
     FLEE = 1
-    def __init__(self, position, world, sprite):
-        super().__init__(position,world,sprite)
+    def __init__(self, position, world, sprites):
+        super().__init__(position,world,sprites)
 
         self.state = AI.HUNT
 

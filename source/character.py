@@ -16,7 +16,7 @@ class Character:
     #Size of the image
     SIZE = 32
 
-    def __init__(self, position, world,sprite=None):
+    def __init__(self, position, world,sprites):
         '''
             Constructor
             x and y -> Position
@@ -30,13 +30,19 @@ class Character:
         self.direction = RIGHT #The current direction
         self.future_direction = RIGHT
         self.world = world
+        self.state = 0
 
+        self.sprite_up    =[]
+        self.sprite_down  =[]
+        self.sprite_right =[]
+        self.sprite_left  =[]
         #Loads the sprites of each direction
-        sheet = SpriteSheet(sprite)
-        self.sprite_up = self.loadSprite(sheet,Character.SIZE*3)
-        self.sprite_down = self.loadSprite(sheet,Character.SIZE*0)
-        self.sprite_right = self.loadSprite(sheet,Character.SIZE*2)
-        self.sprite_left = self.loadSprite(sheet,Character.SIZE*1)   
+        for sprite in sprites:
+            sheet = SpriteSheet(sprite)
+            self.sprite_up.append(self.loadSprite(sheet,Character.SIZE*3))
+            self.sprite_down.append(self.loadSprite(sheet,Character.SIZE*0))
+            self.sprite_right.append(self.loadSprite(sheet,Character.SIZE*2))
+            self.sprite_left.append(self.loadSprite(sheet,Character.SIZE*1)) 
         self.current_sprite = self.sprite_right
         self.animation = 0 #Current animation frame
 
@@ -110,7 +116,7 @@ class Character:
         '''
         #pygame.draw.rect(ctx, (0,255,0), square(self.position.y*Tile.SIZE, self.position.x*Tile.SIZE,Tile.SIZE))
         #ctx.blit(self.current_sprite[self.animation], (self.position.x*Character.SIZE,self.position.y*Character.SIZE))
-        ctx.blit(self.current_sprite[int(self.animation)], (self.animation_position.x * Character.SIZE,self.animation_position.y * Character.SIZE))
+        ctx.blit(self.current_sprite[self.state][int(self.animation)], (self.animation_position.x * Character.SIZE,self.animation_position.y * Character.SIZE))
         if self.moving:
             self.updateAnimation()
         #print(self.animation_position)

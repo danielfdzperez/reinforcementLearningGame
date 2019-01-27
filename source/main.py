@@ -11,7 +11,7 @@ SELECTED_COLOR  = (204, 102, 0)
 
 def main():
     pygame.init()
-    size = len(maps[0][0]) * Tile.SIZE
+    size = MAP_SIZE * Tile.SIZE
     
     ctx = pygame.display.set_mode((size,size), pygame.RESIZABLE)
     
@@ -47,7 +47,10 @@ def main():
                 if event.key == pygame.K_DOWN:
                     selected = (selected - 1)%2
                 if event.key == pygame.K_RETURN:
+                    ACCEPT.play()
+                    #pygame.time.Clock().tick_busy_loop(1)
                     if selected == 0:
+                        shuffle(maps)
                         w = world.World(maps,ctx)
                         w.startGame()
                     else:
