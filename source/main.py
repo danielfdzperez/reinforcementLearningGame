@@ -43,8 +43,10 @@ def main():
                 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_UP:
+                    MOVE_MENU_SOUND.play()
                     selected = (selected + 1)%2
                 if event.key == pygame.K_DOWN:
+                    MOVE_MENU_SOUND.play()
                     selected = (selected - 1)%2
                 if event.key == pygame.K_RETURN:
                     ACCEPT.play()

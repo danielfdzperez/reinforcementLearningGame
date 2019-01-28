@@ -29,7 +29,7 @@ class Target:
         return cls(x,y,animation,8)
     @classmethod
     def special(cls, x, y):
-        sheet = SpriteSheet(PIZZA)
+        sheet = SpriteSheet(SPECIAL)
         animation = [sheet.get_image(0,0,32,32)]
         return cls(x,y,animation,1)
 

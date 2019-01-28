@@ -154,7 +154,7 @@ CHARACTER1_SHEET = GRAPHICS + "character1.png"
 CHARACTER2_SHEET = GRAPHICS + "character2.png"
 CHARACTER4_SHEET = GRAPHICS + "character4.png"
 COINS = GRAPHICS + "coins.png"
-PIZZA = GRAPHICS + "pizza.png"
+SPECIAL = GRAPHICS + "pizza.png"
 
 #Directions
 UP    = Point(0,-1)#0
@@ -173,12 +173,15 @@ MAP_SIZE = 15
 #Sounds
 SOUNDS = "sounds/"
 
-ACCEPT = pygame.mixer.Sound(SOUNDS + 'accept.wav')
-TICK1  = pygame.mixer.Sound(SOUNDS + 'countdownA.ogg')
-TICK2  = pygame.mixer.Sound(SOUNDS + 'countdownB.ogg')
-COIN   = pygame.mixer.Sound(SOUNDS + 'pickupCoin.wav')
-DEAD    = pygame.mixer.Sound(SOUNDS + 'roundEnd.wav')
-
-
+ACCEPT               = pygame.mixer.Sound(SOUNDS + 'accept.wav')
+MOVE_MENU_SOUND      = pygame.mixer.Sound(SOUNDS + 'moveMenu.wav')
+TICK1                = pygame.mixer.Sound(SOUNDS + 'countdownA.ogg')
+TICK2                = pygame.mixer.Sound(SOUNDS + 'countdownB.ogg')
+COIN                 = pygame.mixer.Sound(SOUNDS + 'pickupCoin.wav')
+SPECIAL_SOUND        = pygame.mixer.Sound(SOUNDS + 'special.wav')
+SPECIAL_END_SOUND    = pygame.mixer.Sound(SOUNDS + 'specialEnd.wav')
+LOSE                 = pygame.mixer.Sound(SOUNDS + 'roundEnd.wav')
+WON                  = pygame.mixer.Sound(SOUNDS + 'won.wav')
+ 
 
 

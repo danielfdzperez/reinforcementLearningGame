@@ -99,6 +99,7 @@ class World:
             self.countdown = True
         else:
             self.running = False
+            WON.play()
             self.endGame(WIN)
 
     def selectMap(self, level):
@@ -193,6 +194,7 @@ class World:
         if self.special:
             self.tick_special += 1
             if self.tick_special > World.SPECIAL_TIME:
+                SPECIAL_END_SOUND.play()
                 self.special = False
                 self.tick_special = 0
                 self.changeStateAi(AI.HUNT)
@@ -232,6 +234,7 @@ class World:
         COIN.play()
 
     def collectSpecial(self):
+        SPECIAL_SOUND.play()
         self.special = True
         self.tick_special = 0
         self.changeStateAi(AI.FLEE)
@@ -240,7 +243,7 @@ class World:
         for e in self.enemy:
             if e.position == self.player.position:
                 self.running = False
-                DEAD.play()
+                LOSE.play()
                 for i in range(10):
                     self.draw()
                     self.clock.tick_busy_loop(self.fps)
