@@ -8,14 +8,14 @@ class Player(character.Character):
         Class used for the characters of the game
     '''
 
-    def __init__(self, position, world,sprite=None):
+    def __init__(self, position, world,sprite, with_animation=True):
         '''
             Constructor
             x and y -> Position
             world -> Controller
             sprite -> Sprite sheet name
         '''
-        super().__init__(position,world,sprite)
+        super().__init__(position,world,sprite, with_animation)
         
     def update(self):
         '''
@@ -33,6 +33,9 @@ class Player(character.Character):
         #If the character can move to the new position update the position and animation
         if self.world.canMove(new_position):
             self.move(new_position)
+            if not self.with_animation:
+               self.world.testCoin()
+
             #self.world.testCoin()
 
         #self.animation_position = self.position

@@ -128,9 +128,10 @@ def direction(origin, neighbour):
 W = 0 #Walls
 P = 1 #Paths
 S = 2 #Special
-R = 3 #Enemy Respawn
+C = 3 #Coin
 O = 4 #Player Respawn
-D = 5 #Dock path
+E = 5 #Enemy
+R = 7 #Enemy Respawn
 
 #Colors
 BLACK = (0,0,0)#Color black

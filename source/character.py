@@ -16,7 +16,7 @@ class Character:
     #Size of the image
     SIZE = 32
 
-    def __init__(self, position, world,sprites):
+    def __init__(self, position, world,sprites, with_animation = True):
         '''
             Constructor
             x and y -> Position
@@ -31,23 +31,25 @@ class Character:
         self.future_direction = RIGHT
         self.world = world
         self.state = 0
+        self.moving = False
+        self.with_animation = with_animation
 
         self.sprite_up    =[]
         self.sprite_down  =[]
         self.sprite_right =[]
         self.sprite_left  =[]
-        #Loads the sprites of each direction
-        for sprite in sprites:
-            sheet = SpriteSheet(sprite)
-            self.sprite_up.append(self.loadSprite(sheet,Character.SIZE*3))
-            self.sprite_down.append(self.loadSprite(sheet,Character.SIZE*0))
-            self.sprite_right.append(self.loadSprite(sheet,Character.SIZE*2))
-            self.sprite_left.append(self.loadSprite(sheet,Character.SIZE*1)) 
-        self.current_sprite = self.sprite_right
-        self.animation = 0 #Current animation frame
+        if with_animation:
+            #Loads the sprites of each direction
+            for sprite in sprites:
+                sheet = SpriteSheet(sprite)
+                self.sprite_up.append(self.loadSprite(sheet,Character.SIZE*3))
+                self.sprite_down.append(self.loadSprite(sheet,Character.SIZE*0))
+                self.sprite_right.append(self.loadSprite(sheet,Character.SIZE*2))
+                self.sprite_left.append(self.loadSprite(sheet,Character.SIZE*1)) 
+            self.current_sprite = self.sprite_right
+            self.animation = 0 #Current animation frame
 
-        self.animation_position = self.position
-        self.moving = False
+            self.animation_position = self.position
         
     def loadSprite(self,sheet,raw):
         '''
@@ -84,7 +86,7 @@ class Character:
         self.position = new_position
         #self.position = self.future_position
 
-        self.moving = True
+        self.moving = self.with_animation
         #self.updateAnimation()
 
     def moveTo(self, new_position):

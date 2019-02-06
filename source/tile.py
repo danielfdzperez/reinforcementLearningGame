@@ -10,12 +10,6 @@ class Tile:
     #Constants
     SIZE = 32
 
-    #Types
-    PATH = 1
-    WALL = 0
-    ENEMY_RESPAWN = 2
-    PLAYER_RESPAWN = 3
-
     def __init__(self, x, y, type, image=None, walkable=False, invertible = False):
         '''
             Constructor

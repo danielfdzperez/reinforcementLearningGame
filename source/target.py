@@ -5,7 +5,7 @@ from tile import *
 import pygame
 class Target:
 
-    def __init__(self, x, y, animation, n_animations):
+    def __init__(self, x, y, animation=None, n_animations=0):
         self.position = Point(x,y)
         self.animation = animation
         self.current_animation = 0
@@ -17,19 +17,4 @@ class Target:
 
     def update(self):
         self.current_animation = (self.current_animation + 1)%self.n_animations
-
-
-    #Factory functions
-    @classmethod
-    def coin(cls, x, y):
-        sheet = SpriteSheet(COINS)
-        animation = []
-        for i in range(8):
-            animation.append(sheet.get_image(i*16,0,16,16))
-        return cls(x,y,animation,8)
-    @classmethod
-    def special(cls, x, y):
-        sheet = SpriteSheet(SPECIAL)
-        animation = [sheet.get_image(0,0,32,32)]
-        return cls(x,y,animation,1)
 

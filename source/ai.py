@@ -5,8 +5,8 @@ class AI(ch.Character):
 
     HUNT = 0
     FLEE = 1
-    def __init__(self, position, world, sprites):
-        super().__init__(position,world,sprites)
+    def __init__(self, position, world, sprites, with_animation = True):
+        super().__init__(position,world,sprites, with_animation)
 
         self.state = AI.HUNT
 

@@ -1,4 +1,4 @@
-
+import numpy as np
 from tile import *
 from target import *
 from common import *
@@ -20,6 +20,7 @@ class Map:
         self.width = len(tile_map[0][0])
         self.height = len(tile_map[0])
         self.tiles = [ [ None for i in range(self.width) ] for j in range(self.height)]
+        self.tiles_value = [ [ None for i in range(self.width) ] for j in range(self.height)]
         self.coins = []
         self.special_coins = []
         self.player_spawn = None
@@ -37,15 +38,17 @@ class Map:
         for y in range(self.height):
             for x in range(self.width):
                 tile  = tile_map[y][x]
-                self.tiles[y][x] = self.tile_types[tile](x,y)
+                self.tiles[y][x] = self.tile_types[tile](x,y,self.world.with_animation)
+                self.tiles_value[y][x] = self.tiles[y][x].type
                 if tile is P:
-                    self.coins.append(targets_types[tile](x,y))
+                    self.coins.append(targets_types[tile](x,y,self.world.with_animation))
                 if tile is S:
-                    self.special_coins.append(targets_types[tile](x,y))
+                    self.special_coins.append(targets_types[tile](x,y,self.world.with_animation))
                 if tile is R:
                     self.enemy_spawn.append(Point(x,y))
                 if tile is O:
                     self.player_spawn = Point(x,y)
+        self.tiles_value = np.array(self.tiles_value)
 
     def buildNeighborhood(self):
         for y in range(self.height):
@@ -144,9 +147,11 @@ class Map:
     def swapWalkable(self, position):
         self.tiles[position.y][position.x].swapWalkable()
 
-        
+    def getCurrentState(self):
+        state = self.tiles_value.copy()
+        for coin in self.coins:
+            state[coin.position.y][coin.position.x] = C
+        for special in self.special_coins:
+            state[special.position.y][special.position.x] = S
 
-
-
-        
-
+        return state
