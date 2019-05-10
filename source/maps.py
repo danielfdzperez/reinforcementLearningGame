@@ -7,7 +7,7 @@ from random import shuffle
 '''
 map1 = ([
         [ W, W, W, W, W, W, W, W, W, W ,W, W, W, W, W ],
-        [ W, S, O, P, P, P, P, P, P, P ,P, P, P, S, W ],
+        [ W, S, P, O, P, P, P, P, P, P ,P, P, P, S, W ],
         [ W, P, W, P, W, P, W, W, P, W ,W, P, W, P, W ],
         [ W, P, P, P, P, P, P, P, P, P ,P, P, P, P, W ],
         [ W, P, W, P, W, P, W, W, P, W ,W, P, W, P, W ],
@@ -78,4 +78,5 @@ map4 = ([
         ],{ W:fc.greenWall, P:fc.grassPath, S:fc.grassPath, R:fc.archEnemyRespawn, O:fc.grassPath})
 
 
-maps = [map1,map2,map3,map4]
+mapss = [map1,map2,map3,map4]
+maps = [map1]

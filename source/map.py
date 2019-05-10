@@ -21,6 +21,7 @@ class Map:
         self.height = len(tile_map[0])
         self.tiles = [ [ None for i in range(self.width) ] for j in range(self.height)]
         self.tiles_value = [ [ None for i in range(self.width) ] for j in range(self.height)]
+        self.coins_matrix = np.empty((self.width,self.height),dtype=object)
         self.coins = []
         self.special_coins = []
         self.player_spawn = None
@@ -28,6 +29,10 @@ class Map:
         self.builMap(tile_map[0])
         self.buildNeighborhood()
         self.total_coins = len(self.coins) + len(self.special_coins)
+        self.max_coins = len(self.coins) + len(self.special_coins)
+
+    def current_coins(self):
+        return self.max_coins - self.total_coins
 
     def builMap(self, tile_map):
         '''
@@ -41,9 +46,13 @@ class Map:
                 self.tiles[y][x] = self.tile_types[tile](x,y,self.world.with_animation)
                 self.tiles_value[y][x] = self.tiles[y][x].type
                 if tile is P:
-                    self.coins.append(targets_types[tile](x,y,self.world.with_animation))
+                    coin = targets_types[tile](x,y,self.world.with_animation)
+                    self.coins_matrix[y,x] = coin
+                    self.coins.append(coin)
                 if tile is S:
-                    self.special_coins.append(targets_types[tile](x,y,self.world.with_animation))
+                    special = targets_types[tile](x,y,self.world.with_animation)
+                    self.coins_matrix[y,x] = special
+                    self.special_coins.append(special)
                 if tile is R:
                     self.enemy_spawn.append(Point(x,y))
                 if tile is O:
@@ -84,19 +93,22 @@ class Map:
         if self.total_coins < 1:
             self.world.nextLevel()
 
-    def distanceCoins(self, position):
-        self.coins.sort(key=lambda coin:  distance(coin.position, position, self))
-        self.special_coins.sort(key=lambda coin:  distance(coin.position, position, self))
-
     def collectCoin(self,position):
-        if self.coins and self.coins[0].position == position:
-            self.coins.pop(0)
+        element = self.coins_matrix[position.y,position.x]
+        if element is None:
+            return
+
+        if element in self.coins:
+            i = self.coins.index(element)
+            self.coins.pop(i)
             self.world.collectCoin()
             self.total_coins -= 1
-        if self.special_coins and self.special_coins[0].position == position:
-            self.special_coins.pop(0)
+        if element in self.special_coins:
+            i = self.special_coins.index(element)
+            self.special_coins.pop(i)
             self.world.collectSpecial()
             self.total_coins -= 1
+        self.coins_matrix[position.y,position.x] = None
 
     def isWalkable(self, position):
         '''

@@ -57,6 +57,8 @@ def main():
                         w.startGame()
                     else:
                         print("Under construction")
+                        w = world.World([map1],ctx,artificial_player=True)
+                        w.startGame()
     
     pygame.quit()
 

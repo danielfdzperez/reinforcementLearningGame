@@ -61,25 +61,28 @@ class Character:
                 sheet.get_image(Character.SIZE,raw,Character.SIZE,Character.SIZE),
                 sheet.get_image(Character.SIZE*2,raw,Character.SIZE,Character.SIZE)]
 
-    def update(self):
-        '''
-            Update the character position and animation
-        '''
-        #pos_update = {UP:Point(0,1) ,DOWN:Point(0,-1) ,RIGHT:Point(1,0) ,DOWN:Point(-1,0)}
-        #new_position = self.position + pos_update[self.direction]
-        #calculate the new position
-        if self.moving:
-            return
+    
+    def canUpdate(self):
+        return not self.moving
+    #def update(self):
+    #    '''
+    #        Update the character position and animation
+    #    '''
+    #    #pos_update = {UP:Point(0,1) ,DOWN:Point(0,-1) ,RIGHT:Point(1,0) ,DOWN:Point(-1,0)}
+    #    #new_position = self.position + pos_update[self.direction]
+    #    #calculate the new position
+    #    if self.moving:
+    #        return
 
-        #self.world.playerDead()
-        self.changeDirection(self.future_direction)
-        new_position = self.position + self.direction
-        #If the character can move to the new position update the position and animation
-        if self.world.canMove(new_position):
-            self.move(new_position)
-            self.world.testCoin()
+    #    #self.world.playerDead()
+    #    self.changeDirection(self.future_direction)
+    #    new_position = self.position + self.direction
+    #    #If the character can move to the new position update the position and animation
+    #    if self.world.canMove(new_position):
+    #        self.move(new_position)
+    #        self.world.testCoin()
 
-        #self.animation_position = self.position
+    #    #self.animation_position = self.position
 
     def move(self,new_position):
         self.animation_position = self.position
@@ -144,18 +147,15 @@ class Character:
         #if self.moving:
         #    return
 
+        self.direction = direction
         if direction is UP:
-            self.direction = UP
             self.current_sprite = self.sprite_up
             #change animation
         if direction is DOWN:
-            self.direction = DOWN
             self.current_sprite = self.sprite_down
         if direction is RIGHT:
-            self.direction = RIGHT
             self.current_sprite = self.sprite_right
         if direction is LEFT:
-            self.direction = LEFT
             self.current_sprite = self.sprite_left
 
         

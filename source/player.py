@@ -16,6 +16,17 @@ class Player(character.Character):
             sprite -> Sprite sheet name
         '''
         super().__init__(position,world,sprite, with_animation)
+
+    #def updateStep(self):
+    #    #self.changeDirection(self.future_direction)
+    #    self.direction = self.future_direction
+    #    new_position = self.position + self.direction
+    #    #If the character can move to the new position update the position and animation
+    #    if self.world.canMove(new_position):
+    #        self.move(new_position)
+    #        self.world.testCoin()
+    #    #print(time.time()-t)
+
         
     def update(self):
         '''
@@ -53,4 +64,5 @@ class Player(character.Character):
                self.animation_position = self.position
                self.world.testCoin()
                
-
+    def futureDirection(self,direction):
+        self.future_direction = direction

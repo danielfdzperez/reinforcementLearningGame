@@ -32,6 +32,7 @@ def aStar(start_position, target, map, dynamic = False ,max_i = 1000):
         start_position -> The point of the start
         target -> The target point
         map -> The Map
+        dynamic -> If it is important the changes in the map to know the path. For the ai it is mandatory.
 
         return a touple: first element is the distance and the second where to move to follow the path
     '''
@@ -148,8 +149,11 @@ font_display_loading = pygame.font.Font(None, 80)
 LOADING_TEXT = Text(LOADING,WHITE,font_display_loading) 
 
 
+import os
+THIS_PATH = os.path.dirname(os.path.abspath(__file__))
+
 #File name
-GRAPHICS = "graphics/"
+GRAPHICS = THIS_PATH + "/graphics/"
 TILE_MAP_SHEET = GRAPHICS + "tile_image_map.png"
 CHARACTER1_SHEET = GRAPHICS + "character1.png"
 CHARACTER2_SHEET = GRAPHICS + "character2.png"
@@ -172,8 +176,7 @@ TILE_SHEET = pygame.image.load(TILE_MAP_SHEET)
 MAP_SIZE = 15
 
 #Sounds
-SOUNDS = "sounds/"
-
+SOUNDS = THIS_PATH + "/sounds/"
 ACCEPT               = pygame.mixer.Sound(SOUNDS + 'accept.wav')
 MOVE_MENU_SOUND      = pygame.mixer.Sound(SOUNDS + 'moveMenu.wav')
 TICK1                = pygame.mixer.Sound(SOUNDS + 'countdownA.ogg')

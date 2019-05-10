@@ -1,4 +1,5 @@
 import pygame
+import time
 from tile import *
 from map import *
 from maps import *
@@ -10,6 +11,7 @@ from ai import *
 from textContainer import *
 from text import *
 from player import *
+from playerAi import *
 
 
 class World:
@@ -20,12 +22,12 @@ class World:
     SPECIAL_TIME = 215
     SPECIAL_STEPS = 10
     
-    TIME_PUNISH = -10
-    COIN_REWARD = 30
-    DEAD_PUNISH = -1000000
+    TIME_PUNISH = 0
+    COIN_REWARD = 1
+    DEAD_PUNISH = -1
     WIN_REWARD  = 10000
 
-    def __init__(self, maps, ctx, with_animation = True):
+    def __init__(self, maps, ctx, with_animation = True, artificial_player = False):
         '''
             Constructor
             maps -> List of maps
@@ -41,13 +43,16 @@ class World:
         self.update_coins = 0
         self.enemy = []
         self.reward = 0
+        self.artificial_player = artificial_player
+
 
 
         self.tick_special = 0
         self.special = False
         self.max_special_ticks = World.SPECIAL_TIME
-        if not with_animation:
+        if not with_animation or artificial_player:
             self.max_special_ticks = World.SPECIAL_STEPS
+            #self.updateStateIf = {True:self.updateStateStep, False:lambda:None}
         
         if with_animation:
             self.screen_width, self.screen_height = pygame.display.get_surface().get_size()
@@ -104,7 +109,10 @@ class World:
             loadingDisplay(self.ctx)
 
         self.selectMap(self.level)
-        self.player = Player(self.current_map.player_spawn, self, [CHARACTER1_SHEET], self.with_animation)
+        if self.artificial_player:
+            self.player = PlayerAI(self.current_map.player_spawn, self, [CHARACTER1_SHEET], self.with_animation)
+        else:
+            self.player = Player(self.current_map.player_spawn, self, [CHARACTER1_SHEET], self.with_animation)
         self.enemy.clear()
         for pos in self.current_map.enemy_spawn:
             self.enemy.append(AI(pos,self,[CHARACTER2_SHEET, CHARACTER4_SHEET],self.with_animation))
@@ -205,18 +213,30 @@ class World:
         '''
             Update the characters
         '''
-        self.player.update()
-        #self.current_map.distanceCoins(self.player.position)
-        #self.current_map.collectCoin(self.player.position)
-        for enemy in self.enemy:
-            enemy.update()
+        if self.artificial_player:
+            enemies_can_update = True
+            for enemy in self.enemy:
+                enemies_can_update = enemies_can_update and enemy.canUpdate()
+            if enemies_can_update and self.player.canUpdate():
+                self.player.update()
+                for enemy in self.enemy:
+                    enemy.update()
+                #print(self.generateState())
+                self.updateState()
+                self.playerDead()
+                self.current_map.endMap()
+        else:
+            self.player.update()
+            #self.current_map.distanceCoins(self.player.position)
+            #self.current_map.collectCoin(self.player.position)
+            for enemy in self.enemy:
+                enemy.update()
 
-        self.updateState()
-        self.playerDead()
-        self.current_map.endMap()
+            self.updateState()
+            self.playerDead()
+            self.current_map.endMap()
 
     def testCoin(self):
-        self.current_map.distanceCoins(self.player.position)
         self.current_map.collectCoin(self.player.position)
         
     def updateState(self):
@@ -260,12 +280,16 @@ class World:
 
     def collectCoin(self):
 
+        #self.addReward((World.COIN_REWARD/self.current_map.total_coins)+10)
+        #self.addReward(World.COIN_REWARD*self.current_map.current_coins())
         self.addReward(World.COIN_REWARD)
         #print('punto')
         if self.with_animation:
             COIN.play()
 
     def collectSpecial(self):
+        #self.addReward((World.COIN_REWARD/self.current_map.total_coins)*2+10)
+        #self.addReward(World.COIN_REWARD*self.current_map.current_coins()*20)
         self.addReward(World.COIN_REWARD)
         if self.with_animation:
             SPECIAL_SOUND.play()
@@ -293,6 +317,34 @@ class World:
         self.update()
         return self.generateState(),self.reward
 
+    #def updateStep(self):
+    #    '''
+    #        Update the characters
+    #    '''
+    #    self.player.updateStep()
+    #    #self.current_map.distanceCoins(self.player.position)
+    #    #self.current_map.collectCoin(self.player.position)
+    #    #for enemy in self.enemy:
+    #    self.enemy[0].update()
+    #    self.enemy[1].update()
+
+    #    #self.updateState()
+    #    self.updateStateIf[self.special]()
+    #    self.playerDeadStep()
+    #    self.current_map.endMap()
+
+    #def updateStateStep(self):
+    #    self.tick_special += 1
+    #    if self.tick_special > self.max_special_ticks:
+    #        self.special = False
+    #        self.tick_special = 0
+    #        self.changeStateAi(AI.HUNT)
+    #def playerDeadStep(self):
+    #    if self.enemy[0].position == self.player.position or self.enemy[1].position == self.player.position:
+    #        self.running = False
+    #        self.addReward(World.DEAD_PUNISH)
+    #        self.endGame(GAME_OVER)
+
     def addReward (self,reward):
         self.reward += reward
 
@@ -300,10 +352,76 @@ class World:
         self.level = (self.level + 1) % self.max_level
         self.loadLevel()
         self.running = True
+        return self.generateState()
+
+    def repeatEpisode(self):
+        self.loadLevel()
+        self.running = True
+        return self.generateState()
+
 
     def generateState(self):
         state = self.current_map.getCurrentState()
         state[self.player.position.y][self.player.position.x] = O
-        for enemy in self.enemy:
-            state[enemy.position.y][enemy.position.x] = E
+        #for enemy in self.enemy:
+        #    state[enemy.position.y][enemy.position.x] = E
+        state[self.enemy[0].position.y][self.enemy[0].position.x] = E
+        state[self.enemy[1].position.y][self.enemy[1].position.x] = E
         return state
+
+    def getLocalState(self):
+        s = self.generateState()
+        row = [0]*s.shape[1]
+        s = np.vstack((row,s,row))
+        col = np.array([0]*s.shape[0])
+        col = col.reshape(s.shape[0],1)
+        s = np.hstack((col,s,col))
+        y = self.player.position.y+1
+        x = self.player.position.x+1
+        return s[y-2:y+3,x-2:x+3]
+
+
+    def getPartialState(self):
+        s = self.generateState()
+
+        #Pone filas y columnas extras con 0
+        row = [0]*s.shape[1]
+        s = np.vstack((row,s,row))
+        col = np.array([0]*s.shape[0])
+        col = col.reshape(s.shape[0],1)
+        s = np.hstack((col,s,col))
+
+        ne = np.zeros((4,4))
+        y = self.player.position.y+1
+        x = self.player.position.x +1
+        ne[0] = [s[y-1,x],s[y-2,x],s[y-1,x-1],s[y-1,x+1]]
+        ne[1] = [s[y+1,x],s[y+2,x],s[y+1,x-1],s[y+1,x+1]]
+        ne[2] = [s[y,x+1],s[y,x+2],s[y-1,x+1],s[y+1,x+1]]
+        ne[3] = [s[y,x-1],s[y,x-2],s[y-1,x-1],s[y+1,x-1]]
+        #ne[ne == 0] = 5
+
+        ne = np.trunc(ne/5)
+
+        ne = ne.sum(axis=1)
+        #if not ne.all()==0:
+        #    ne = np.trunc(ne/ne.max())
+        #print(ne)
+        #print("##")
+
+        return ne
+
+    def getWallState(self):
+        s = self.generateState()
+
+        ne = np.zeros((4))
+        y = self.player.position.y
+        x = self.player.position.x
+        ne[0] = s[y-1,x]
+        ne[1] = s[y+1,x]
+        ne[2] = s[y,x+1]
+        ne[3] = s[y,x-1]
+        ne[ne == 0] = 20
+
+        ne = np.trunc(ne/20)
+
+        return ne
